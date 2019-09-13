@@ -12,7 +12,7 @@ const title = yup
     .required(),
   objectId = yup
     .string()
-    .matches(/^[a-f\d]{24}$/i)
+    .matches(/^[a-f\d]{24}$/i, 'not valid objectid')
     .required(),
   commentBody = yup
     .string()
@@ -31,7 +31,15 @@ export const createPostValidator = input => {
 
 export const updatePostValidator = input => {
   const schema = yup.object({
-    postID: objectId
+    postID: objectId,
+    title: yup
+      .string()
+      .max(50)
+      .min(2),
+    body: yup
+      .string()
+      .max(1024)
+      .min(1)
   })
 
   return schema.validate(input)

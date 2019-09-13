@@ -1,5 +1,5 @@
 import { UserInputError, AuthenticationError, ApolloError } from 'apollo-server'
-import { createPostValidator } from './validation'
+import { createPostValidator, updatePostValidator } from './validation'
 
 async function createPost(
   _,
@@ -12,19 +12,31 @@ async function createPost(
   //create post
   const post = await Post.create({ ...args, user: requester.id })
 
-  console.log(post)
-
   //add the post to user instance
-  const user = await User.findOneAndUpdate(
+  await User.findOneAndUpdate(
     { _id: requester.id },
-    {
-      $push: { posts: post._id }
-    },
-    {
-      new: true
-    }
+    { $push: { posts: post._id } }
   )
-  console.log(user)
+
+  return post
+}
+
+async function updatePost(_, args, { models: { Post }, user: requester }) {
+  //validate the input schema
+  await updatePostValidator(args)
+
+  //check if the post exist
+  const post = await Post.findOne({ _id: args.postID })
+  if (!post) throw new UserInputError('there is no such a post')
+
+  //check if the post belongs to requester
+  if (post.user != requester.id)
+    throw new UserInputError('you have no privilege updating that post')
+
+  //update post
+  if (args.title) post.title = args.title
+  if (args.body) post.body = args.body
+  await post.save()
 
   return post
 }
@@ -35,6 +47,6 @@ async function posts(_, __, { models: { Post } }) {
 }
 
 export default {
-  Mutation: { createPost },
+  Mutation: { createPost, updatePost },
   Query: { posts }
 }
