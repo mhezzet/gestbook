@@ -94,7 +94,7 @@ export const CREATE_POST = gql`
 */
 
 export const UPDATE_POST = gql`
-  mutation updatePost($postID: ID!, $body: String) {
+  mutation updatePost($postID: ID!, $body: String!) {
     updatePost(postID: $postID, body: $body) {
       id
       body
@@ -104,11 +104,11 @@ export const UPDATE_POST = gql`
       }
       comments {
         id
-        body
         user {
           id
           email
         }
+        body
       }
     }
   }

@@ -4,7 +4,7 @@ import { Typography, Card, Button, Input, Icon, message } from 'antd'
 import { useQuery, useMutation } from '@apollo/react-hooks'
 import { DELETE_POST, POSTS, client, COMMENT_A_POST } from '../store'
 
-export default function Post({ post, isAuth, profile }) {
+export default function Post({ post, isAuth, profile, onEdit }) {
   const [comment, setComment] = useState('')
   const userID = (profile && JSON.parse(profile).id) || null
   const [deletePost] = useMutation(DELETE_POST)
@@ -40,6 +40,7 @@ export default function Post({ post, isAuth, profile }) {
               type='delete'
             />
             <Icon
+              onClick={onEdit}
               style={{
                 position: 'absolute',
                 right: 50,

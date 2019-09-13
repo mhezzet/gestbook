@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Typography, Input, Button, Empty, Modal, message } from 'antd'
 import { useQuery, useMutation } from '@apollo/react-hooks'
-import { POSTS, GET_AUTH, RESET_AUTH, CREATE_POST } from '../store'
+import { POSTS, GET_AUTH, RESET_AUTH, CREATE_POST, UPDATE_POST } from '../store'
 import Post from '../components/Post'
 import styles from './Landing.module.css'
 import SignForm from '../components/SignForm'
@@ -9,16 +9,24 @@ import Loading from '../components/Loading'
 
 export default function Landing() {
   const [post, setPost] = useState('')
+  const [currentPost, setCurrentPost] = useState({})
+  const [modal, setModal] = useState(false)
+  const [modalUpdate, setModalUpdate] = useState(false)
   const { loading: postsLoading, error: postsError, data: posts } = useQuery(
     POSTS
   )
   const { data: auth } = useQuery(GET_AUTH)
   const [resetAuth] = useMutation(RESET_AUTH)
   const [createPost, { loading: createPostLoading }] = useMutation(CREATE_POST)
-  const [modal, setModal] = useState(false)
+  const [updatePost, { loading: updatePostLoading }] = useMutation(UPDATE_POST)
 
   if (postsLoading) return <Loading />
   if (postsError) return <p>{postsError.message}</p>
+
+  const postEditHandler = post => {
+    setCurrentPost(post)
+    setModalUpdate(true)
+  }
 
   return (
     <div className={styles.container}>
@@ -91,6 +99,7 @@ export default function Landing() {
           profile={auth.profile}
           key={post.id}
           post={post}
+          onEdit={() => postEditHandler(post)}
         />
       ))}
       <Modal
@@ -101,6 +110,37 @@ export default function Landing() {
         footer={null}
       >
         <SignForm setModal={setModal} />
+      </Modal>
+      <Modal
+        visible={modalUpdate}
+        title='Update the Post'
+        onCancel={() => setModalUpdate(false)}
+        footer={[
+          <Button key='back' onClick={() => setModalUpdate(false)}>
+            Return
+          </Button>,
+          <Button
+            key='submit'
+            type='primary'
+            loading={updatePostLoading}
+            onClick={() =>
+              updatePost({
+                variables: { postID: currentPost.id, body: currentPost.body }
+              })
+                .then(() => setModalUpdate(false))
+                .catch(err => message.error(err.graphQLErrors[0].message))
+            }
+          >
+            Update
+          </Button>
+        ]}
+      >
+        <Input
+          value={currentPost && currentPost.body}
+          onChange={e =>
+            setCurrentPost({ ...currentPost, body: e.target.value })
+          }
+        />
       </Modal>
     </div>
   )
