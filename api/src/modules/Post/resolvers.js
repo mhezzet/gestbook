@@ -39,7 +39,7 @@ async function updatePost(_, args, { models: { Post }, user: requester }) {
   if (!post) throw new UserInputError('there is no such a post')
 
   //check if the post belongs to requester
-  if (post.user != requester.id)
+  if (post.user.id != requester.id)
     throw new AuthenticationError('you have no privilege updating this post')
 
   //update post
@@ -64,7 +64,7 @@ async function deletePost(
   if (!post) throw new UserInputError('there is no such a post')
 
   //check if the post belongs to requester
-  if (post.user != requester.id)
+  if (post.user.id != requester.id)
     throw new AuthenticationError('you have no privilege deleting this post')
 
   //delete post

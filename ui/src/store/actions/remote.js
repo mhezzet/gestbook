@@ -122,7 +122,7 @@ export const UPDATE_POST = gql`
 
 export const DELETE_POST = gql`
   mutation deletePost($postID: ID!) {
-    deletePost(postID: postID) {
+    deletePost(postID: $postID) {
       id
       body
       user {

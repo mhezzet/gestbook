@@ -22,13 +22,6 @@ const commentSchema = new Schema(
 
 const postSchema = new Schema(
   {
-    title: {
-      type: String,
-      maxlength: 50,
-      minlength: 2,
-      trim: true,
-      required: true
-    },
     body: {
       type: String,
       maxlength: 1024,

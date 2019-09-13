@@ -1,31 +1,54 @@
 import React, { useState } from 'react'
 import styles from './Post.module.css'
-import { Typography, Card, Button, Input, Icon } from 'antd'
+import { Typography, Card, Button, Input, Icon, message } from 'antd'
+import { useQuery, useMutation } from '@apollo/react-hooks'
+import { DELETE_POST, POSTS, client } from '../store'
 
-export default function Post({ post }) {
+export default function Post({ post, isAuth, profile }) {
   const [comment, setComment] = useState('')
+  const userID = (profile && JSON.parse(profile).id) || null
+  const [deletePost] = useMutation(DELETE_POST)
 
   return (
     <div className={styles.container}>
       <Card className={styles.card}>
-        <Icon
-          style={{
-            position: 'absolute',
-            right: 20,
-            fontSize: 18,
-            cursor: 'pointer'
-          }}
-          type='delete'
-        />
-        <Icon
-          style={{
-            position: 'absolute',
-            right: 50,
-            fontSize: 18,
-            cursor: 'pointer'
-          }}
-          type='edit'
-        />
+        {post.user.id === userID && (
+          <>
+            <Icon
+              onClick={() =>
+                deletePost({
+                  variables: { postID: post.id },
+                  update(cache) {
+                    const { posts } = cache.readQuery({ query: POSTS })
+
+                    cache.writeQuery({
+                      query: POSTS,
+                      data: { posts: posts.filter(pst => pst.id !== post.id) }
+                    })
+                  }
+                })
+                  .then(() => message.success('post deleted successfully'))
+                  .catch(err => message.error(err.graphQLErrors[0].message))
+              }
+              style={{
+                position: 'absolute',
+                right: 20,
+                fontSize: 18,
+                cursor: 'pointer'
+              }}
+              type='delete'
+            />
+            <Icon
+              style={{
+                position: 'absolute',
+                right: 50,
+                fontSize: 18,
+                cursor: 'pointer'
+              }}
+              type='edit'
+            />
+          </>
+        )}
         <Typography.Text strong>{post.user.email}</Typography.Text>
         <Typography.Paragraph style={{ marginTop: 4 }}>
           {post.body}
@@ -40,14 +63,16 @@ export default function Post({ post }) {
             </div>
           ))}
         </div>
-        <div className={styles.comment}>
-          <Input.TextArea
-            onChange={e => setComment(e.target.value)}
-            placeholder='type your message'
-            autosize={{ minRows: 2, maxRows: 4 }}
-          />
-          <Button className={styles.commentButton}>comment</Button>
-        </div>
+        {isAuth && (
+          <div className={styles.comment}>
+            <Input.TextArea
+              onChange={e => setComment(e.target.value)}
+              placeholder='type your message'
+              autosize={{ minRows: 2, maxRows: 4 }}
+            />
+            <Button className={styles.commentButton}>comment</Button>
+          </div>
+        )}
       </Card>
     </div>
   )
