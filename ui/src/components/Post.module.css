@@ -1,2 +1,12 @@
 .container {
+  margin: 12px 0px;
+}
+
+.comment {
+  display: flex;
+  align-items: center;
+}
+
+.commentButton {
+  margin-left: 15px;
 }
