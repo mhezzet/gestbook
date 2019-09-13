@@ -12,7 +12,7 @@ const title = yup
     .required(),
   objectId = yup
     .string()
-    .matches(/^[a-f\d]{24}$/i, 'not valid objectid')
+    .matches(/^[a-f\d]{24}$/i, 'not a valid objectid')
     .required(),
   commentBody = yup
     .string()
