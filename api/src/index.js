@@ -7,7 +7,7 @@ import { schema, models } from './modules'
 
 //apollo server config
 const server = new ApolloServer({
-  mocks: true,
+  // mocks: true,
   schema,
   context: ({ req }) => {
     let user
