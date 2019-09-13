@@ -21,7 +21,7 @@ async function createPost(
   await User.findOneAndUpdate(
     { _id: requester.id },
     { $push: { posts: post._id } }
-  )
+  ).populate('user')
 
   return post
 }
@@ -31,7 +31,9 @@ async function updatePost(_, args, { models: { Post }, user: requester }) {
   await updatePostValidator(args)
 
   //check if the post exist
-  const post = await Post.findOne({ _id: args.postID })
+  const post = await Post.findOne({ _id: args.postID }).populate(
+    'user comments.user'
+  )
   if (!post) throw new UserInputError('there is no such a post')
 
   //check if the post belongs to requester
@@ -78,21 +80,22 @@ async function commentAPost(_, args, { models: { Post }, user: requester }) {
   //validate the input schema
   await commentAPostValidator(args)
 
-  //check if the post exist
+  //check if the post exist and update it
   const post = await Post.findOneAndUpdate(
     { _id: args.postID },
     { $push: { comments: { user: requester.id, body: args.body } } },
     {
       new: true
     }
-  )
+  ).populate('user comments.user')
   if (!post) throw new UserInputError('there is no such a post')
 
   return post
 }
 
 async function posts(_, __, { models: { Post } }) {
-  const posts = await Post.find()
+  const posts = await Post.find().populate('user comments.user')
+
   return posts
 }
 

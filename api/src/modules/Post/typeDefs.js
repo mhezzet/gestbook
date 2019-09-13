@@ -16,12 +16,12 @@ export default gql`
     id: ID!
     title: String!
     body: String!
-    user: ID!
+    user: User!
     comments: [Comment!]
   }
 
   type Comment {
-    user: ID!
+    user: User!
     body: String!
   }
 `
