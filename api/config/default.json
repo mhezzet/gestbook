@@ -1,6 +1,6 @@
 {
   "JWT_SECRET": "123",
   "DB_URI": "mongodb+srv://mhezzet:oJIuJskZTqwYNVit@cluster0-yr3hu.mongodb.net/test?retryWrites=true&w=majority",
-  "PORT": "3005",
+  "PORT": "3000",
   "env": "development"
 }

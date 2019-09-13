@@ -1,0 +1,19 @@
+version: '3'
+services:
+  api:
+    build:
+      dockerfile: Dockerfile
+      context: ./api
+    environment:
+      - NODE_ENV=production
+  ui:
+    build:
+      dockerfile: Dockerfile
+      context: ./ui
+  proxy:
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: ./proxy
+    ports:
+      - 8080:80
