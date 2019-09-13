@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose'
 
-const addressSchema = new Schema(
+const commentSchema = new Schema(
   {
     user: {
       type: Schema.Types.ObjectId,
@@ -41,7 +41,7 @@ const postSchema = new Schema(
       ref: 'user',
       required: true
     },
-    comments: [addressSchema]
+    comments: [commentSchema]
   },
   {
     timestamps: true

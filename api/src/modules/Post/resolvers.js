@@ -2,7 +2,8 @@ import { UserInputError, AuthenticationError, ApolloError } from 'apollo-server'
 import {
   createPostValidator,
   updatePostValidator,
-  deletePostValidator
+  deletePostValidator,
+  commentAPostValidator
 } from './validation'
 
 async function createPost(
@@ -73,12 +74,29 @@ async function deletePost(
   return post
 }
 
+async function commentAPost(_, args, { models: { Post }, user: requester }) {
+  //validate the input schema
+  await commentAPostValidator(args)
+
+  //check if the post exist
+  const post = await Post.findOneAndUpdate(
+    { _id: args.postID },
+    { $push: { comments: { user: requester.id, body: args.body } } },
+    {
+      new: true
+    }
+  )
+  if (!post) throw new UserInputError('there is no such a post')
+
+  return post
+}
+
 async function posts(_, __, { models: { Post } }) {
   const posts = await Post.find()
   return posts
 }
 
 export default {
-  Mutation: { createPost, updatePost, deletePost },
+  Mutation: { createPost, updatePost, deletePost, commentAPost },
   Query: { posts }
 }
