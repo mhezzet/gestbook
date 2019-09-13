@@ -1,8 +1,16 @@
 import React, { useState } from 'react'
 import styles from './Post.module.css'
-import { Typography, Card, Button, Input, Icon, message } from 'antd'
-import { useQuery, useMutation } from '@apollo/react-hooks'
-import { DELETE_POST, POSTS, client, COMMENT_A_POST } from '../store'
+import {
+  Typography,
+  Card,
+  Button,
+  Input,
+  Icon,
+  message,
+  Popconfirm
+} from 'antd'
+import { useMutation } from '@apollo/react-hooks'
+import { DELETE_POST, POSTS, COMMENT_A_POST } from '../store'
 
 export default function Post({ post, isAuth, profile, onEdit }) {
   const [comment, setComment] = useState('')
@@ -15,8 +23,9 @@ export default function Post({ post, isAuth, profile, onEdit }) {
       <Card className={styles.card}>
         {post.user.id === userID && (
           <>
-            <Icon
-              onClick={() =>
+            <Popconfirm
+              title='Are you sure delete this post?'
+              onConfirm={() =>
                 deletePost({
                   variables: { postID: post.id },
                   update(cache) {
@@ -31,14 +40,20 @@ export default function Post({ post, isAuth, profile, onEdit }) {
                   .then(() => message.success('post deleted successfully'))
                   .catch(err => message.error(err.graphQLErrors[0].message))
               }
-              style={{
-                position: 'absolute',
-                right: 20,
-                fontSize: 18,
-                cursor: 'pointer'
-              }}
-              type='delete'
-            />
+              okText='Yes'
+              cancelText='No'
+            >
+              <Icon
+                style={{
+                  position: 'absolute',
+                  right: 20,
+                  fontSize: 18,
+                  cursor: 'pointer'
+                }}
+                type='delete'
+              />
+            </Popconfirm>
+
             <Icon
               onClick={onEdit}
               style={{
