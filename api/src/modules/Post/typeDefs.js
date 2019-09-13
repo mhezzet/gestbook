@@ -21,6 +21,7 @@ export default gql`
   }
 
   type Comment {
+    id: ID!
     user: User!
     body: String!
   }

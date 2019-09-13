@@ -1,4 +1,4 @@
-import { UserInputError, AuthenticationError, ApolloError } from 'apollo-server'
+import { UserInputError, AuthenticationError } from 'apollo-server'
 import {
   createPostValidator,
   updatePostValidator,
@@ -38,7 +38,7 @@ async function updatePost(_, args, { models: { Post }, user: requester }) {
 
   //check if the post belongs to requester
   if (post.user != requester.id)
-    throw new UserInputError('you have no privilege updating this post')
+    throw new AuthenticationError('you have no privilege updating this post')
 
   //update post
   if (args.title) post.title = args.title
@@ -57,12 +57,14 @@ async function deletePost(
   await deletePostValidator(args)
 
   //check if the post exist
-  const post = await Post.findOne({ _id: args.postID })
+  const post = await Post.findOne({ _id: args.postID }).populate(
+    'user comments.user'
+  )
   if (!post) throw new UserInputError('there is no such a post')
 
   //check if the post belongs to requester
   if (post.user != requester.id)
-    throw new UserInputError('you have no privilege deleting this post')
+    throw new AuthenticationError('you have no privilege deleting this post')
 
   //delete post
   await post.delete()
