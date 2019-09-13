@@ -9,7 +9,7 @@ export default gql`
   }
 
   type Query {
-    me: User @user
+    me: AuthResolver @user
   }
 
   type AuthResolver {
@@ -19,6 +19,7 @@ export default gql`
 
   type User {
     id: ID!
+    email: String!
     posts: [Post!]!
   }
 `

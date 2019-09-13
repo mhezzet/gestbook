@@ -36,9 +36,26 @@ async function signin(_, args, { models: { User } }) {
   return { user, token }
 }
 
+async function me(_, __, { models: { User }, user: requester }) {
+  //check if there is a user in the request
+  if (!requester) throw new AuthenticationError('you r not authorized')
+
+  //its useless step if there is a user then it must be in the db
+  const user = await User.findOne({ _id: requester.id })
+  if (!user) throw new UserInputError('no such a user')
+
+  //generate token
+  const token = user.genToken()
+
+  return { user, token }
+}
+
 export default {
   Mutation: {
     signup,
     signin
+  },
+  Query: {
+    me
   }
 }
