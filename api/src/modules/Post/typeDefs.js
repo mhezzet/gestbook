@@ -2,8 +2,8 @@ import { gql } from 'apollo-server'
 
 export default gql`
   extend type Mutation {
-    createPost(title: String!, body: String!): Post @user
-    updatePost(postID: ID!, title: String, body: String): Post @user
+    createPost(body: String!): Post @user
+    updatePost(postID: ID!, body: String!): Post @user
     deletePost(postID: ID!): Post @user
     commentAPost(postID: ID!, body: String): Post @user
   }
@@ -14,7 +14,6 @@ export default gql`
 
   type Post {
     id: ID!
-    title: String!
     body: String!
     user: User!
     comments: [Comment!]

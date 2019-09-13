@@ -43,7 +43,6 @@ export const POSTS = gql`
   query posts {
     posts {
       id
-      title
       body
       user {
         id
@@ -68,10 +67,9 @@ export const POSTS = gql`
 */
 
 export const CREATE_POST = gql`
-  mutation createPost($title: String!, $body: String!) {
-    createPost(title: $title, body: $body) {
+  mutation createPost($body: String!) {
+    createPost(body: $body) {
       id
-      title
       body
       user {
         id
@@ -96,10 +94,9 @@ export const CREATE_POST = gql`
 */
 
 export const UPDATE_POST = gql`
-  mutation updatePost($postID: ID!, $title: String, $body: String) {
-    updatePost(postID: $postID, title: $title, body: $body) {
+  mutation updatePost($postID: ID!, $body: String) {
+    updatePost(postID: $postID, body: $body) {
       id
-      title
       body
       user {
         id
@@ -127,7 +124,6 @@ export const DELETE_POST = gql`
   mutation deletePost($postID: ID!) {
     deletePost(postID: postID) {
       id
-      title
       body
       user {
         id
@@ -147,7 +143,6 @@ export const COMMENT_A_POST = gql`
   mutation commentAPost($postID: ID!, $body: String!) {
     commentAPost(postID: postID) {
       id
-      title
       body
       user {
         id

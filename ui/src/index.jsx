@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import Store from './store'
 import Landing from './pages/Landing'
 import NotFound from './pages/NotFound'
+import 'antd/dist/antd.css'
 
 function App() {
   return (

@@ -1,11 +1,6 @@
 import * as yup from 'yup'
 
-const title = yup
-    .string()
-    .max(50)
-    .min(2)
-    .required(),
-  postBody = yup
+const postBody = yup
     .string()
     .max(1024)
     .min(1)
@@ -22,7 +17,6 @@ const title = yup
 
 export const createPostValidator = input => {
   const schema = yup.object({
-    title,
     body: postBody
   })
 
@@ -32,10 +26,6 @@ export const createPostValidator = input => {
 export const updatePostValidator = input => {
   const schema = yup.object({
     postID: objectId,
-    title: yup
-      .string()
-      .max(50)
-      .min(2),
     body: yup
       .string()
       .max(1024)

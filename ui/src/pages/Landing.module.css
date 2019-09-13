@@ -1,0 +1,20 @@
+.title {
+  text-align: center;
+}
+
+.container {
+  padding-top: 20px;
+  width: 600px;
+  margin: auto;
+}
+
+.postMessage {
+  margin-top: 35px;
+  display: flex;
+  flex-direction: column;
+}
+
+.postButton {
+  margin-top: 6px;
+  align-self: flex-end;
+}

@@ -21,7 +21,9 @@ async function createPost(
   await User.findOneAndUpdate(
     { _id: requester.id },
     { $push: { posts: post._id } }
-  ).populate('user')
+  )
+
+  await Post.populate(post, 'user')
 
   return post
 }
@@ -41,8 +43,7 @@ async function updatePost(_, args, { models: { Post }, user: requester }) {
     throw new AuthenticationError('you have no privilege updating this post')
 
   //update post
-  if (args.title) post.title = args.title
-  if (args.body) post.body = args.body
+  post.body = args.body
   await post.save()
 
   return post
