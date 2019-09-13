@@ -141,7 +141,7 @@ export const DELETE_POST = gql`
 
 export const COMMENT_A_POST = gql`
   mutation commentAPost($postID: ID!, $body: String!) {
-    commentAPost(postID: postID) {
+    commentAPost(postID: $postID, body: $body) {
       id
       body
       user {

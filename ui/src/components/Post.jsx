@@ -2,12 +2,13 @@ import React, { useState } from 'react'
 import styles from './Post.module.css'
 import { Typography, Card, Button, Input, Icon, message } from 'antd'
 import { useQuery, useMutation } from '@apollo/react-hooks'
-import { DELETE_POST, POSTS, client } from '../store'
+import { DELETE_POST, POSTS, client, COMMENT_A_POST } from '../store'
 
 export default function Post({ post, isAuth, profile }) {
   const [comment, setComment] = useState('')
   const userID = (profile && JSON.parse(profile).id) || null
   const [deletePost] = useMutation(DELETE_POST)
+  const [commentAPost] = useMutation(COMMENT_A_POST)
 
   return (
     <div className={styles.container}>
@@ -66,11 +67,21 @@ export default function Post({ post, isAuth, profile }) {
         {isAuth && (
           <div className={styles.comment}>
             <Input.TextArea
+              value={comment}
               onChange={e => setComment(e.target.value)}
               placeholder='type your message'
               autosize={{ minRows: 2, maxRows: 4 }}
             />
-            <Button className={styles.commentButton}>comment</Button>
+            <Button
+              onClick={() =>
+                commentAPost({
+                  variables: { postID: post.id, body: comment }
+                }).catch(err => message.error(err.graphQLErrors[0].message))
+              }
+              className={styles.commentButton}
+            >
+              comment
+            </Button>
           </div>
         )}
       </Card>
