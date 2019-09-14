@@ -11,7 +11,7 @@ const server = new ApolloServer({
   schema,
   context: ({ req }) => {
     let user
-    const token = req.headers['authorization']
+    const token = (req && req.headers && req.headers['authorization']) || null
     try {
       user = JWT.verify(token, config.get('JWT_SECRET'))
     } catch (err) {

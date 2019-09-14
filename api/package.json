@@ -4,11 +4,13 @@
   "main": "./src/index.js",
   "scripts": {
     "dev": "nodemon -r esm src/index.js",
-    "start": "node -r esm src/index.js"
+    "start": "node -r esm src/index.js",
+    "test": "jest --watch --verbose"
   },
   "license": "MIT",
   "dependencies": {
     "apollo-server": "^2.9.3",
+    "apollo-server-testing": "^2.9.3",
     "bcryptjs": "^2.4.3",
     "config": "^3.2.2",
     "esm": "^3.2.25",
@@ -20,6 +22,12 @@
   },
   "devDependencies": {
     "eslint": "^6.3.0",
+    "jest": "^24.9.0",
     "nodemon": "^1.19.2"
+  },
+  "jest": {
+    "transform": {
+      ".js": "jest-esm-transformer"
+    }
   }
 }

@@ -1,0 +1,4 @@
+{
+  "DB_URI": "mongodb+srv://mhezzet:lWp2q7yzgl6VjiTy@cluster0-rdfjq.mongodb.net/test?retryWrites=true&w=majority",
+  "PORT": 4002
+}
