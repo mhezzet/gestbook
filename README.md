@@ -1,5 +1,5 @@
 # gestbook
 getting statred
-* cd gestbokk 
+* cd gestbook 
 * docker-compose up
 * go to localhost:8080
