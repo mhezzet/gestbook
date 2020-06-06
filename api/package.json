@@ -9,7 +9,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "apollo-server": "^2.9.3",
+    "apollo-server": "^2.14.2",
     "apollo-server-testing": "^2.9.3",
     "bcryptjs": "^2.4.3",
     "config": "^3.2.2",
